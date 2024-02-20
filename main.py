@@ -29,20 +29,22 @@ class Motor:
 class Auto:
     cantidadCreados = 0
 
-    def __init__(self, modelo, precio, marca, motor, registro):
+    def __init__(self, modelo, precio, asientos, marca, motor, registro):
         self.modelo = modelo
         self.precio = precio
+        self.asientos = asientos
         self.marca = marca
         self.motor = motor
         self.registro = registro
-        self.asientos = []
         Auto.cantidadCreados += 1
 
     def cantidadAsientos(self):
-        return len(self.asientos)
+        return sum(1 for asiento in self.asientos if isinstance(asiento, Asiento))
 
     def verificarIntegridad(self):
-        registros = set([self.registro, self.motor.registro] + [asiento.registro for asiento in self.asientos])
+        registros = {self.registro, self.motor.registro}
+        registros.update(asiento.registro for asiento in self.asientos if isinstance(asiento, Asiento))
+        
         if len(registros) == 1:
             return "Auto original"
         else:
